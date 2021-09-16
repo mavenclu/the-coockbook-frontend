@@ -1,5 +1,5 @@
 ---
-description: front end part for the CookBook Spring Boot App
+description: front end part for the Spring Boot App CookBook
 ---
 
 # The CookBook front-end
