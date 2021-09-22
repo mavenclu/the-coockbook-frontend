@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 import org.springframework.web.server.ResponseStatusException;
 import org.thymeleaf.exceptions.TemplateInputException;
@@ -37,45 +38,41 @@ public class RecipeMvcController {
     }
 
     @GetMapping("/recipes/add")
-    public String renderRecipeForm(Model model,  @AuthenticationPrincipal OidcUser principal){
-        ControllerCommonUtil.addProfileToModel(model, principal);
+    public String renderRecipeForm(Model model, @RequestAttribute("accessToken") String accessToken){
         log.info("renderRecipeForm() - creating form");
-        addAttributesToModelAddRecipeForm(model);
+        addAttributesToModelAddRecipeForm(model, accessToken);
         log.info("renderForm() - added attributes to form. Form rendered.");
         return "add-recipe-form";
     }
 
 
     @PostMapping("/recipes/save")
-    public String saveRecipe(@ModelAttribute RecipeForm recipeForm, Model model, BindingResult result,  @AuthenticationPrincipal OidcUser principal){
+    public String saveRecipe(@ModelAttribute RecipeForm recipeForm, Model model, BindingResult result, @RequestAttribute("accessToken") String accessToken){
         log.info("saveRecipe() - checking for errors");
-        ControllerCommonUtil.addProfileToModel(model, principal);
-        if (result.hasErrors()) {
+        if (result.hasErrors() ) {
             log.warn("saveRecipe() - errors found: {}", result.getAllErrors());
-            model.addAttribute("errors", result.getAllErrors());
             return "error";
-        }else {
+        }
+        else {
             log.info("saveRecipe() - no errors. calling RecipeWebService to save recipe");
-            recipeWebService.saveRecipe(recipeForm);
+            recipeWebService.saveRecipe(recipeForm, accessToken);
+
             log.info("saveRecipe() - recipe saved.");
-            model.addAttribute("recipes", recipeWebService.getAllRecipes());
+            model.addAttribute("recipes", recipeWebService.getAllRecipes(accessToken));
             log.info("saveRecipe() - got all recipes from db, added to model, redirecting to homepage");
             return "redirect:/";
         }
 
     }
 
-    @GetMapping("/recipe-post")
-    public String showRecipe(Model model){
-        return "recipe-post";
-    }
+
 
     @GetMapping("/recipes/{id}")
-    public String showRecipeTemplate(Model model, @PathVariable Long id){
+    public String showRecipe(Model model, @PathVariable Long id, @RequestAttribute("accessToken") String accessToken){
         try {
 
             log.info("showRecipeTemplate() - populating template by recipe with ID: {}", id);
-            RecipeWebDto recipe = recipeWebService.getRecipeWithWebClient(id);
+            RecipeWebDto recipe = recipeWebService.getRecipeWithWebClient(id, accessToken);
             log.info("showRecipeTemplate() - got recipe: {}", recipe);
             log.info("showRecipeTemplate() - adding recipe to model");
             model.addAttribute("recipe", recipe);
@@ -89,7 +86,7 @@ public class RecipeMvcController {
         }
     }
 
-    private void addAttributesToModelAddRecipeForm(Model model){
+    private void addAttributesToModelAddRecipeForm(Model model, String accessToken){
         RecipeForm recipe = new RecipeForm();
         recipe.getInstructions().add("");
         recipe.getInstructions().add("");
@@ -103,7 +100,7 @@ public class RecipeMvcController {
         model.addAttribute("diet", RecipeWebDto.Diet.values());
         model.addAttribute("difficulty", RecipeWebDto.Difficulty.values());
         model.addAttribute("measure", RecipeItemWebDto.Measure.values());
-        List<IngredientWebDto> ingredients = ingredientWebService.getAllIngredients();
+        List<IngredientWebDto> ingredients = ingredientWebService.getAllIngredients(accessToken);
         model.addAttribute("ingredientsFromDb", ingredients);
 
     }

@@ -9,6 +9,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.client.reactive.ReactorClientHttpConnector;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.netty.http.client.HttpClient;
@@ -23,9 +25,9 @@ public class WebClientConfig {
     @Value("${cookbook.rest.resource.base-url}")
     private String baseUrl;
 
-
     @Bean
     public WebClient getWebClient() {
+
 
         HttpClient httpClient = HttpClient.create()
                 .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 5000)
@@ -33,6 +35,7 @@ public class WebClientConfig {
                 .doOnConnected(conn ->
                         conn.addHandlerLast(new ReadTimeoutHandler(5000, TimeUnit.MILLISECONDS))
                                 .addHandlerLast(new WriteTimeoutHandler(5000, TimeUnit.MILLISECONDS)));
+
 
         return WebClient.builder()
                 .baseUrl(baseUrl)

@@ -1,6 +1,5 @@
 package cz.mavenclu.cookbook.thymeleaf.service;
 
-//import cz.mavenclu.cookbook.thymeleaf.config.ResourceApiConfig;
 import cz.mavenclu.cookbook.thymeleaf.dto.IngredientWebDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.ParameterizedTypeReference;
@@ -17,20 +16,17 @@ public class IngredientWebService {
 
 
     private final WebClient webClient;
-//    private final ResourceApiConfig urlConfig;
 
-    public IngredientWebService(WebClient webClient
-//            , ResourceApiConfig urlConfig
-    ) {
+    public IngredientWebService(WebClient webClient) {
         this.webClient = webClient;
-//        this.urlConfig = urlConfig;
     }
 
-    public List<IngredientWebDto> getAllIngredients() {
+    public List<IngredientWebDto> getAllIngredients( String accessToken) {
         log.info("getAllIngredients");
         Mono<List<IngredientWebDto>> response = webClient
                 .get()
                 .uri("/cookbook/ingredients")
+                .headers(httpHeaders -> httpHeaders.setBearerAuth(accessToken))
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
                 .bodyToMono(new ParameterizedTypeReference<>() {

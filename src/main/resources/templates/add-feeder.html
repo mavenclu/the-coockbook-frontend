@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<div th:replace="fragments/head"></div>
+<body>
+
+<div th:replace="fragments/preloader"></div>
+<div th:replace="fragments/header"></div>
+
+
+
+
+<!-- ##### Breadcumb Area Start ##### -->
+<div class="breadcumb-area bg-img bg-overlay" style="background-image: url('../img/bg-img/breadcumb3.jpg')">
+    <div class="container h-100">
+        <div class="row h-100 align-items-center">
+            <div class="col-12">
+                <div class="breadcumb-text text-center">
+                    <h2>Add Consumer</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- ##### Breadcumb Area End ##### -->
+
+<div class="receipe-post-area section-padding-80">
+
+    <section class="best-receipe-area" id="recipes">
+        <div class="container">
+            <div class="row mt-5">
+                <div class="col-12">
+                    <div class="section-heading">
+                        <h3>Add new Consumer</h3>
+                    </div>
+                </div>
+                <div class="row mb-80">
+                    <div class="col-12">
+                        <div class="contact-form-area">
+                            <form th:action="@{/feeders/save}" th:object="${feeder}" method="post">
+                                <div class="row">
+                                    <div class="col-12 col-lg-6">
+                                        <input th:field="*{name}" type="text" class="form-control" id="name" placeholder="Name">
+                                    </div>
+
+                                    <div class="col-12">
+                                        <a th:href="@{/}" class="btn delicious-btn mt-30" type="button">Cancel</a>
+                                        <button class="btn delicious-btn mt-30" type="submit">Save</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+
+
+            </div>
+        </div>
+    </section>
+
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+<div th:replace="fragments/subscribe-area"></div>
+<div th:replace="fragments/instagram-area"></div>
+<div th:replace="fragments/footer"></div>
+<div th:replace="fragments/scripts"></div>
+
+
+</body>
+
+</html>

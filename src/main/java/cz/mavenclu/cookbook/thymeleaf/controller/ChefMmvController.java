@@ -12,7 +12,7 @@ public class ChefMmvController {
 
     @GetMapping("/account")
     public String showAccountInfo(Model model, @AuthenticationPrincipal OidcUser principal){
-        ControllerCommonUtil.addProfileToModel(model, principal);
+        CommonUtilController.addProfileToModel(model, principal);
         return "account";
     }
 

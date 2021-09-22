@@ -59,7 +59,9 @@ public class RecipeWebDto {
         VEGETARIAN("Vegetarian"),
         GLUTEN_FREE("Gluten free"),
         DIARY_FREE("Diary free"),
-        REFINE_SUGARS_FREE("Refine sugars free");
+        REFINE_SUGARS_FREE("Refine sugars free"),
+        HISTAMINE_FREE("Foods with no or low histamine contain");
+
 
         private final String label;
 
