@@ -27,6 +27,9 @@ public class RecipeWebService {
     @Value("${cookbook.rest.resource.recipe-by-id}")
     private String recipeById;
 
+    @Value("${cookbook.rest.resource.recipes-search}")
+    private String searchRecipesUrl;
+
 
     public RecipeWebService(WebClient webClient) {
         this.webClient = webClient;
@@ -86,5 +89,21 @@ public class RecipeWebService {
         ;
         log.info("saveRecipe() - sent post request");
 
+    }
+
+
+    public List<RecipeWebDto> findRecipesByCuisine(String cuisine, String accessToken) {
+        log.error("LOOKING FOR RECIPES BY CUISINE");
+        Mono<List<RecipeWebDto>> filteredResponse = webClient
+                .get()
+                .uri(searchRecipesUrl, cuisine)
+                .headers(h -> h.setBearerAuth(accessToken))
+                .accept(MediaType.APPLICATION_JSON)
+                .retrieve()
+                .bodyToMono(new ParameterizedTypeReference<>() {
+                });
+        List<RecipeWebDto> filteredRecipes = filteredResponse.block();
+        log.error("findRecipesByCuisine - found: {}", filteredRecipes);
+        return filteredRecipes;
     }
 }

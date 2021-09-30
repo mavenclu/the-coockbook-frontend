@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<div th:replace="fragments/head"></div>
+<body>
+
+<div th:replace="fragments/preloader"></div>
+<div th:replace="fragments/header"></div>
+
+
+
+
+<!-- ##### Breadcumb Area Start ##### -->
+<div class="breadcumb-area bg-img bg-overlay" style="background-image: url('../img/bg-img/breadcumb3.jpg')">
+    <div class="container h-100">
+        <div class="row h-100 align-items-center">
+            <div class="col-12">
+                <div class="breadcumb-text text-center">
+                    <h2>Add New Recipe</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- ##### Breadcumb Area End ##### -->
+
+<div class="receipe-post-area section-padding-80" sec:authorize="isAuthenticated()">
+
+    <section class="best-receipe-area" id="recipes">
+        <div class="container">
+            <div class="row mt-5">
+                <div class="col-12">
+                    <div class="section-heading">
+                        <h3>Add new Recipe</h3>
+                    </div>
+                </div>
+                <div class="row mb-80">
+                    <div class="col-12">
+                        <div class="contact-form-area">
+
+
+
+
+                            <form th:object="${recipe}" th:action="@{/recipes/save}" method="post">
+                                <h4 class="mb-3">General Info</h4>
+                                <hr class="my-4">
+
+                                <div class="row g-5">
+
+                                    <div class="col-12">
+                                        <label for="title" class="form-label">Title</label>
+                                        <input th:field="*{title}" type="text" class="form-control" id="title" placeholder="Svickova" required>
+
+                                    </div>
+
+                                    <div class="col-12">
+                                        <label for="description" class="form-label">Description</label>
+                                        <textarea th:field="*{description}" type="text" class="form-control" id="description" placeholder="Yummy vegan recipe" required rows="3"></textarea>
+
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <label for="prepTime" class="form-label">Preparation time</label>
+                                        <input th:field="*{prepTime}" type="number" class="form-control" id="prepTime" placeholder="15 min" value="" step="5" min="5" required>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <label for="cookingTime" class="form-label">Cooking time</label>
+                                        <input th:field="*{cookingTime}" type="number" class="form-control" id="cookingTime" placeholder="" value="30 min" min="5" step="5" required>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <label for="yields" class="form-label">Yields</label>
+                                        <input th:field="*{yields}" type="number" class="form-control" id="yields" placeholder="" value="30 min" min="5" step="5" required>
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <label for="difficulty" class="form-label">Difficulty</label>
+                                        <select th:field="*{difficulty}"  class="form-select" id="difficulty" required>
+                                            <option value="">Choose...</option>
+                                            <option th:each="op : ${T(cz.mavenclu.cookbook.thymeleaf.dto.RecipeWebDto.Difficulty).values()}" th:value="${op.name()}" th:text="${op.label}"></option>
+                                        </select>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <label for="cuisine" class="form-label">Cuisine</label>
+                                        <select th:field="*{cuisine}" class="form-select" id="cuisine" required>
+                                            <option value="">Choose...</option>
+                                            <option th:each="cu : ${cuisine}" th:value="${cu.name()}" th:text="${cu.label}"></option>
+                                        </select>
+                                    </div>
+
+                                </div>
+
+                                <hr class="my-4">
+                                <h4>Diet</h4>
+
+                                <div class="form-check form-check-inline" th:each="di : ${diet}">
+                                    <input class="form-check-input" name="diets" th:field="*{diets}" type="checkbox"  th:value="${di.name()}">
+                                    <label class="form-check-label"  th:text="${di.label}"></label>
+                                </div>
+
+                                <hr class="my-4">
+
+                                <h4 class="mb-3">Ingredients</h4>
+
+                                <div class="row g-5" th:each="ingredient, iStat : *{ingredients}">
+
+                                    <div class="col-md-3">
+                                        <label  class="form-label">Amount</label>
+                                        <input type="number" class="form-control"  th:field="*{ingredients[__${iStat.index}__].amount}" placeholder="2" min="0" required>
+                                    </div>
+
+                                    <div class="col-md-5">
+                                        <label  class="form-label">Measure</label>
+                                        <select  class="form-select"  required th:field="*{ingredients[__${iStat.index}__].measure}">
+                                            <option value="">Choose...</option>
+                                            <option th:each="ms : ${T(cz.mavenclu.cookbook.thymeleaf.dto.RecipeItemWebDto.Measure).values()}" th:value="${ms.name()}" th:text="${ms.label}"></option>
+                                        </select>
+                                    </div>
+
+                                    <div class="col-md-4">
+                                        <label class="form-label">Ingredient</label>
+                                        <select class="form-select"  required th:field="*{ingredients[__${iStat.index}__].ingredientId}">
+                                            <option value="">Choose...</option>
+                                            <option th:each="in : ${ingredientsFromDb}" th:value="${in.id}" th:text="${in.name}"></option>
+                                        </select>
+
+                                    </div>
+
+                                </div>
+
+
+                                <hr class="my-4">
+                                <h4 class="mb-3">Instructions</h4>
+
+
+                                <div class="input-group mb-3" th:each="instruction, itemStat : *{instructions}">
+
+                                    <div class="col-12 col-lg-1 text-right">
+                                        <label class="form-label mt-0" type="number"  th:text="${itemStat.count}"></label>
+                                    </div>
+                                    <div class="col-12 col-lg-11">
+                                        <input th:field="*{instructions[__${itemStat.index}__]}" type="text" class="form-control" >
+
+                                    </div>
+<!--                                    <div  class="input-group-text">-->
+<!--                                        <label class="form-label mt-0" type="number"  th:text="${itemStat.count}"></label>-->
+<!--                                    </div>-->
+<!--                                    <input th:field="*{instructions[__${itemStat.index}__]}" type="text" class="form-control" >-->
+                                </div>
+
+
+                                <hr class="my-4">
+
+
+                                <div class="col-12">
+                                    <a th:href="@{/}" class="btn delicious-btn mt-30" type="button">Cancel</a>
+                                    <button class="btn delicious-btn mt-30" type="submit">Save</button>
+                                </div>
+
+                                <hr class="my-4">
+
+
+                            </form>
+
+
+
+
+                        </div>
+                    </div>
+                </div>
+
+
+
+            </div>
+        </div>
+    </section>
+
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+<div th:replace="fragments/subscribe-area"></div>
+<div th:replace="fragments/instagram-area"></div>
+<div th:replace="fragments/footer"></div>
+<div th:replace="fragments/scripts"></div>
+
+
+</body>
+
+</html>

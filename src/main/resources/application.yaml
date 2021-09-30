@@ -42,3 +42,4 @@ cookbook:
       update-recipe-by-id: /cookbook/recipes/update/{id}
       base-url: http://localhost:8081
       all-feeders: /cookbook/feeders
+      recipes-search: /cookbook/recipes/search/{search}

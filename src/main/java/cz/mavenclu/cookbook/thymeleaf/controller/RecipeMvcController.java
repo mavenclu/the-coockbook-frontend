@@ -42,7 +42,7 @@ public class RecipeMvcController {
         log.info("renderRecipeForm() - creating form");
         addAttributesToModelAddRecipeForm(model, accessToken);
         log.info("renderForm() - added attributes to form. Form rendered.");
-        return "add-recipe-form";
+        return "add-new-recipe-form";
     }
 
 

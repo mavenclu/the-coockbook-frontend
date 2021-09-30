@@ -66,6 +66,9 @@
                                 <i class="fa fa-star-o" aria-hidden="true"></i>
                             </div>
                             <a href="#" class="btn delicious-btn" th:text="${recipe.difficulty}"></a>
+                            <a th:each="diet : ${recipe.diets}" href="#" class="btn delicious-btn" th:text="${diet}"></a>
+                            <a href="#" class="btn delicious-btn" th:text="${recipe.cuisine}"></a>
+
                         </div>
                     </div>
                 </div>

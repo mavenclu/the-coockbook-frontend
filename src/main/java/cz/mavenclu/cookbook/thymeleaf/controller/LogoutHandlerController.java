@@ -49,7 +49,8 @@ public class LogoutHandlerController extends SecurityContextLogoutHandler {
 
         String issuer = (String) getClientRegistration().getProviderDetails().getConfigurationMetadata().get("issuer");
         String clientId = getClientRegistration().getClientId();
-        String returnTo = ServletUriComponentsBuilder.fromCurrentContextPath().build().toString();
+//        String returnTo = ServletUriComponentsBuilder.fromCurrentContextPath().build().toString();
+        String returnTo = "http://localhost:8091/login";
 
         String logoutUrl = UriComponentsBuilder
                 .fromHttpUrl(issuer + "v2/logout?client_id={clientId}&returnTo={returnTo}")

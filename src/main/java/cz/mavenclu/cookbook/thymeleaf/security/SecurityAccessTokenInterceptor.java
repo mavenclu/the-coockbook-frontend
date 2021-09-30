@@ -28,6 +28,9 @@ public class SecurityAccessTokenInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        if (!request.getRequestURI().equals("/logout")) {
+
+
 
         try {
             log.info("preHandle - looking for principal");
@@ -54,6 +57,8 @@ public class SecurityAccessTokenInterceptor implements HandlerInterceptor {
         }
 
         return false;
+        }
+        return true;
 
     }
 
