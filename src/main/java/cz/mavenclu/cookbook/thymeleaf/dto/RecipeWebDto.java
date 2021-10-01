@@ -54,18 +54,18 @@ public class RecipeWebDto {
     List<String> instructions = new ArrayList<>();
 
     public enum Diet {
-        VEGAN("Vegan"),
-        OMNIVORE("Omnivore"),
-        VEGETARIAN("Vegetarian"),
-        GLUTEN_FREE("Gluten free"),
         DIARY_FREE("Diary free"),
+        GLUTEN_FREE("Gluten free"),
+        HISTAMINE_FREE("Low histamine"),
+        OMNIVORE("Omnivore"),
         REFINE_SUGARS_FREE("Refine sugars free"),
-        HISTAMINE_FREE("Low histamine contain");
+        VEGAN("Vegan"),
+        VEGETARIAN("Vegetarian");
 
 
         private final String label;
 
-        private Diet(String value){
+        Diet(String value){
             label = value;
         }
 
@@ -80,18 +80,23 @@ public class RecipeWebDto {
     }
 
     public enum Difficulty {
-        EASY("Easy"),
-        MEDIUM("Ok"),
-        HARD("Hard");
+        EASY("Easy", "success"),
+        MEDIUM("Ok", "warning"),
+        HARD("Hard", "danger");
 
         private final String label;
+        private final String frontEndHelper;
 
-        private Difficulty(String value){
+        Difficulty(String value, String frontEndHelper){
             this.label = value;
+            this.frontEndHelper = frontEndHelper;
         }
 
         public String getLabel() {
             return label;
+        }
+        public String getFrontEndHelper(){
+            return frontEndHelper;
         }
 
         @Override
@@ -101,13 +106,13 @@ public class RecipeWebDto {
     }
 
     public enum Cuisine {
-        CZECH("Czech"),
-        ASIAN("Asian"),
-        MEDITERRANEAN("Mediterranean"),
         AMERICAN("American"),
-        THAI("Thai"),
+        ASIAN("Asian"),
+        CZECH("Czech"),
         INDIAN("Indian"),
-        OTHER("other");
+        MEDITERRANEAN("Mediterranean"),
+        THAI("Thai"),
+        OTHER("Other");
 
         private final String label;
 

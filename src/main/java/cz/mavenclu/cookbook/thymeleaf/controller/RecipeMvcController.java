@@ -5,12 +5,13 @@ import cz.mavenclu.cookbook.thymeleaf.dto.RecipeForm;
 import cz.mavenclu.cookbook.thymeleaf.dto.RecipeItemForm;
 import cz.mavenclu.cookbook.thymeleaf.dto.RecipeItemWebDto;
 import cz.mavenclu.cookbook.thymeleaf.dto.RecipeWebDto;
+import cz.mavenclu.cookbook.thymeleaf.dto.SearchObjectForm;
+import cz.mavenclu.cookbook.thymeleaf.service.FeederService;
 import cz.mavenclu.cookbook.thymeleaf.service.IngredientWebService;
 import cz.mavenclu.cookbook.thymeleaf.service.RecipeWebService;
+import cz.mavenclu.cookbook.thymeleaf.util.ControllerModelPopulateHelper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -31,10 +32,19 @@ public class RecipeMvcController {
 
     private final RecipeWebService recipeWebService;
     private final IngredientWebService ingredientWebService;
+    private final FeederService feederService;
 
-    public RecipeMvcController(RecipeWebService recipeWebService, IngredientWebService ingredientWebService) {
+    public RecipeMvcController(RecipeWebService recipeWebService, IngredientWebService ingredientWebService, FeederService feederService) {
         this.recipeWebService = recipeWebService;
         this.ingredientWebService = ingredientWebService;
+        this.feederService = feederService;
+    }
+
+    @GetMapping("/")
+    public String home(Model model, @RequestAttribute("accessToken") String accessToken) {
+        model.addAttribute("recipes", recipeWebService.getAllRecipes(accessToken));
+        model.addAttribute("feeders", feederService.findAll(accessToken));
+        return "index";
     }
 
     @GetMapping("/recipes/add")
@@ -44,6 +54,8 @@ public class RecipeMvcController {
         log.info("renderForm() - added attributes to form. Form rendered.");
         return "add-new-recipe-form";
     }
+
+
 
 
     @PostMapping("/recipes/save")
@@ -65,6 +77,24 @@ public class RecipeMvcController {
 
     }
 
+    @PostMapping("/recipes/filter")
+    public String filterRecipes(Model model, @ModelAttribute SearchObjectForm searchForm,
+                                BindingResult bindingResult, @RequestAttribute("accessToken") String accessToken){
+        log.info("filterRecipes - filtering recipes with param: {}", searchForm.getCuisine());
+        if (bindingResult.hasErrors() || searchForm.getCuisine() == null){
+            log.info("filterRecipes - errors found in model. Redirecting home.");
+            return "redirect:/";
+        } else {
+
+            log.info("filterRecipes - calling recipe service");
+            List<RecipeWebDto> filteredResult = recipeWebService.findRecipesByCuisine(searchForm.getCuisine().getLabel(), accessToken);
+            log.info("filterRecipes - got filtered result: {}", filteredResult);
+            model.addAttribute("recipes", filteredResult);
+            model.addAttribute("feeders", feederService.findAll(accessToken));
+            return "index";
+        }
+    }
+
 
 
     @GetMapping("/recipes/{id}")
@@ -73,7 +103,7 @@ public class RecipeMvcController {
 
             log.info("showRecipeTemplate() - populating template by recipe with ID: {}", id);
             RecipeWebDto recipe = recipeWebService.getRecipeWithWebClient(id, accessToken);
-            log.info("showRecipeTemplate() - got recipe: {}", recipe);
+            log.info("showRecipeTemplate() - got recipe with ID: {}", recipe.getId());
             log.info("showRecipeTemplate() - adding recipe to model");
             model.addAttribute("recipe", recipe);
             log.info("showRecipeTemplate() - rendering template");

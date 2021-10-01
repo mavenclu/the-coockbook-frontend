@@ -70,7 +70,7 @@
 
                                     <div class="col-md-4">
                                         <label for="yields" class="form-label">Yields</label>
-                                        <input th:field="*{yields}" type="number" class="form-control" id="yields" placeholder="" value="30 min" min="5" step="5" required>
+                                        <input th:field="*{yields}" type="number" class="form-control" id="yields" placeholder="" value="30 min" min="1" step="1" required>
                                     </div>
 
                                     <div class="col-md-3">
@@ -85,7 +85,7 @@
                                         <label for="cuisine" class="form-label">Cuisine</label>
                                         <select th:field="*{cuisine}" class="form-select" id="cuisine" required>
                                             <option value="">Choose...</option>
-                                            <option th:each="cu : ${cuisine}" th:value="${cu.name()}" th:text="${cu.label}"></option>
+                                            <option th:each="cu : ${T(cz.mavenclu.cookbook.thymeleaf.dto.RecipeWebDto.Cuisine).values()}" th:value="${cu.name}" th:text="${cu.label}"></option>
                                         </select>
                                     </div>
 
@@ -94,8 +94,8 @@
                                 <hr class="my-4">
                                 <h4>Diet</h4>
 
-                                <div class="form-check form-check-inline" th:each="di : ${diet}">
-                                    <input class="form-check-input" name="diets" th:field="*{diets}" type="checkbox"  th:value="${di.name()}">
+                                <div class="form-check form-check-inline" th:each="di : ${T(cz.mavenclu.cookbook.thymeleaf.dto.RecipeWebDto.Diet).values()}">
+                                    <input class="form-check-input" name="diets" th:field="*{diets}" type="checkbox" />
                                     <label class="form-check-label"  th:text="${di.label}"></label>
                                 </div>
 
