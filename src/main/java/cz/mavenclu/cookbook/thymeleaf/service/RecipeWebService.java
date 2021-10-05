@@ -8,7 +8,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.MediaType;
-import org.springframework.security.oauth2.core.OAuth2AccessToken;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
@@ -37,12 +36,11 @@ public class RecipeWebService {
 
 
 
-    public RecipeWebDto getRecipeWithWebClient(Long id, String accessToken){
+    public RecipeWebDto getRecipeWithWebClient(Long id){
         log.info("getRecipeWithWebClient() - calling WebClient to look for recipe with ID: {}", id);
         Mono<RecipeWebDto> recipeMono =  webClient
                 .get()
                 .uri(recipeById, id)
-                .headers(httpHeaders -> httpHeaders.setBearerAuth(accessToken))
                 .accept(MediaType.APPLICATION_JSON)
                 .exchangeToMono(response -> {
                     if (response.statusCode().is2xxSuccessful()){
@@ -58,11 +56,10 @@ public class RecipeWebService {
         return recipe;
     }
 
-    public List<RecipeWebDto> getAllRecipes(String accessToken){
+    public List<RecipeWebDto> getAllRecipes(){
         Mono<List<RecipeWebDto>> response = webClient
                 .get()
                 .uri(allRecipesUrl)
-                .headers(httpHeaders -> httpHeaders.setBearerAuth(accessToken))
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
                 .bodyToMono(new ParameterizedTypeReference<>() {
@@ -72,15 +69,14 @@ public class RecipeWebService {
         return recipes;
     }
 
-    public void saveRecipe(RecipeForm recipeForm, String accessToken) {
-        log.info("saveRecipe() - with params: recipe form {} and accessToken: {}", recipeForm, accessToken);
+    public void saveRecipe(RecipeForm recipeForm) {
+        log.info("saveRecipe() - with params: recipe form {} ", recipeForm);
         log.info("saveRecipe() - creating Mono of recipeForm");
         Mono<RecipeForm> recipe = Mono.just(recipeForm);
         log.info("saveRecipe() - created: {}", recipe);
         webClient
                 .post()
                 .uri(allRecipesUrl)
-                .headers(h -> h.setBearerAuth(accessToken))
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(recipe,  RecipeForm.class)
                 .retrieve()
@@ -92,12 +88,11 @@ public class RecipeWebService {
     }
 
 
-    public List<RecipeWebDto> findRecipesByCuisine(String cuisine, String accessToken) {
+    public List<RecipeWebDto> findRecipesByCuisine(String cuisine) {
         log.error("LOOKING FOR RECIPES BY CUISINE");
         Mono<List<RecipeWebDto>> filteredResponse = webClient
                 .get()
                 .uri(searchRecipesUrl, cuisine)
-                .headers(h -> h.setBearerAuth(accessToken))
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
                 .bodyToMono(new ParameterizedTypeReference<>() {

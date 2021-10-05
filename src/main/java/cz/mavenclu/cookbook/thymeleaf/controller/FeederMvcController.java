@@ -26,8 +26,8 @@ public class FeederMvcController {
     }
 
     @GetMapping("/consumers")
-    public String showConsumers(Model model, @RequestAttribute("accessToken") String accessToken){
-        model.addAttribute("feeders", feederService.findAll(accessToken));
+    public String showConsumers(Model model){
+        model.addAttribute("feeders", feederService.findAll());
         return "feeders";
     }
 
@@ -40,14 +40,14 @@ public class FeederMvcController {
     }
 
     @PostMapping("/save")
-    public String saveFeeder(@ModelAttribute FeederForm feeder, Model model, BindingResult bindingResult, @RequestAttribute("accessToken") String accessToken) {
+    public String saveFeeder(@ModelAttribute FeederForm feeder, Model model, BindingResult bindingResult) {
         log.info("saveFeeder - params feeder: {}", feeder);
         if(bindingResult.hasErrors()) {
             log.warn("saveFeeder - found errors in model: {}", bindingResult.getAllErrors());
             model.addAttribute("errors", bindingResult.getAllErrors());
             return "redirect:/feeders/add";
         }
-        feederService.saveFeeder(feeder, accessToken);
+        feederService.saveFeeder(feeder);
         return "redirect:/feeders/consumers";
     }
 }

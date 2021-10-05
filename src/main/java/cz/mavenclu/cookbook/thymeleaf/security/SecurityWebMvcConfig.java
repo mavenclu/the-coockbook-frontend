@@ -16,25 +16,12 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @EnableWebMvc
 public class SecurityWebMvcConfig implements WebMvcConfigurer {
 
-    private final SecurityAccessTokenInterceptor accessTokenInterceptor;
-
-    public SecurityWebMvcConfig(SecurityAccessTokenInterceptor accessTokenInterceptor) {
-        this.accessTokenInterceptor = accessTokenInterceptor;
-    }
-
-    @Override
-    public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(accessTokenInterceptor).excludePathPatterns("/css/**", "/img/**", "/js/**", "/fonts/**", "/scss/**");
-    }
-
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry
                 .addResourceHandler("/**")
                 .addResourceLocations("classpath:/resources/", "classpath:/static/");
     }
-
-
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
         registry.addViewController("/notFound").setViewName("redirect:/");

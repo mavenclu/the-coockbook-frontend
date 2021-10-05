@@ -24,14 +24,13 @@ public class FeederService {
         this.webClient = webClient;
     }
 
-    public void saveFeeder(FeederForm feeder, String tokenValue) {
+    public void saveFeeder(FeederForm feeder) {
 
-        log.info("saveFeeder - feeder to save: {} and token: {}", feeder, tokenValue);
+        log.info("saveFeeder - feeder to save: {}", feeder);
         Mono<FeederForm> feederMono = Mono.just(feeder);
         webClient
                 .post()
                 .uri(feedersUrl)
-                .headers(headers -> headers.setBearerAuth(tokenValue))
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(feederMono, FeederForm.class)
                 .retrieve()
@@ -40,11 +39,10 @@ public class FeederService {
                 ;
     }
 
-    public List<FeederDto> findAll(String accessToken) {
+    public List<FeederDto> findAll() {
         Mono<List<FeederDto>> response = webClient
                 .get()
                 .uri(feedersUrl)
-                .headers(httpHeaders -> httpHeaders.setBearerAuth(accessToken))
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
                 .bodyToMono(new ParameterizedTypeReference<>() {})
