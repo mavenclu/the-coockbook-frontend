@@ -95,7 +95,7 @@
                                 <h4>Diet</h4>
 
                                 <div class="form-check form-check-inline" th:each="di : ${T(cz.mavenclu.cookbook.thymeleaf.dto.RecipeWebDto.Diet).values()}">
-                                    <input class="form-check-input" name="diets" th:field="*{diets}" type="checkbox" />
+                                    <input class="form-check-input" name="diets" th:field="*{diets}" type="checkbox" th:value="${di.name}"/>
                                     <label class="form-check-label"  th:text="${di.label}"></label>
                                 </div>
 

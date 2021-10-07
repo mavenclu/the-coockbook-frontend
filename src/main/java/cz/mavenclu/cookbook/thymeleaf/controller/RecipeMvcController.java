@@ -44,16 +44,18 @@ public class RecipeMvcController {
 
     @GetMapping("/")
     public String home(Model model, @AuthenticationPrincipal OidcUser principal) {
+
         ControllerModelPopulateHelper.addProfileToModel(model, principal);
-        model.addAttribute("recipes", recipeWebService.getAllRecipes());
-        model.addAttribute("feeders", feederService.findAll());
+        model.addAttribute("recipes", recipeWebService.getAllRecipes(principal.getIdToken().getTokenValue()));
+        model.addAttribute("searchForm", new SearchObjectForm());
+        model.addAttribute("feeders", feederService.findAll(principal.getIdToken().getTokenValue()));
         return "index";
     }
 
     @GetMapping("/recipes/add")
-    public String renderRecipeForm(Model model){
+    public String renderRecipeForm(Model model, @AuthenticationPrincipal OidcUser principal){
         log.info("renderRecipeForm() - creating form");
-        addAttributesToModelAddRecipeForm(model);
+        addAttributesToModelAddRecipeForm(model, principal.getIdToken().getTokenValue());
         log.info("renderForm() - added attributes to form. Form rendered.");
         return "add-new-recipe-form";
     }
@@ -62,7 +64,7 @@ public class RecipeMvcController {
 
 
     @PostMapping("/recipes/save")
-    public String saveRecipe(@ModelAttribute RecipeForm recipeForm, Model model, BindingResult result){
+    public String saveRecipe(@ModelAttribute RecipeForm recipeForm, Model model, BindingResult result,  @AuthenticationPrincipal OidcUser principal){
         log.info("saveRecipe() - checking for errors");
         if (result.hasErrors() ) {
             log.warn("saveRecipe() - errors found: {}", result.getAllErrors());
@@ -70,10 +72,10 @@ public class RecipeMvcController {
         }
         else {
             log.info("saveRecipe() - no errors. calling RecipeWebService to save recipe");
-            recipeWebService.saveRecipe(recipeForm);
+            recipeWebService.saveRecipe(recipeForm, principal.getIdToken().getTokenValue());
 
             log.info("saveRecipe() - recipe saved.");
-            model.addAttribute("recipes", recipeWebService.getAllRecipes());
+            model.addAttribute("recipes", recipeWebService.getAllRecipes(principal.getIdToken().getTokenValue()));
             log.info("saveRecipe() - got all recipes from db, added to model, redirecting to homepage");
             return "redirect:/";
         }
@@ -82,7 +84,7 @@ public class RecipeMvcController {
 
     @PostMapping("/recipes/filter")
     public String filterRecipes(Model model, @ModelAttribute SearchObjectForm searchForm,
-                                BindingResult bindingResult){
+                                BindingResult bindingResult, @AuthenticationPrincipal OidcUser principal){
         log.info("filterRecipes - filtering recipes with param: {}", searchForm.getCuisine());
         if (bindingResult.hasErrors() || searchForm.getCuisine() == null){
             log.info("filterRecipes - errors found in model. Redirecting home.");
@@ -90,10 +92,11 @@ public class RecipeMvcController {
         } else {
 
             log.info("filterRecipes - calling recipe service");
-            List<RecipeWebDto> filteredResult = recipeWebService.findRecipesByCuisine(searchForm.getCuisine().getLabel());
+            List<RecipeWebDto> filteredResult = recipeWebService.findRecipesByCuisine(searchForm.getCuisine().getLabel(), principal.getIdToken().getTokenValue());
             log.info("filterRecipes - got filtered result: {}", filteredResult);
             model.addAttribute("recipes", filteredResult);
-            model.addAttribute("feeders", feederService.findAll());
+            model.addAttribute("feeders", feederService.findAll(principal.getIdToken().getTokenValue()));
+            model.addAttribute("searchForm", new SearchObjectForm());
             return "index";
         }
     }
@@ -101,11 +104,12 @@ public class RecipeMvcController {
 
 
     @GetMapping("/recipes/{id}")
-    public String showRecipe(Model model, @PathVariable Long id){
+    public String showRecipe(Model model, @PathVariable Long id,
+                             @AuthenticationPrincipal OidcUser principal){
         try {
 
             log.info("showRecipeTemplate() - populating template by recipe with ID: {}", id);
-            RecipeWebDto recipe = recipeWebService.getRecipeWithWebClient(id);
+            RecipeWebDto recipe = recipeWebService.getRecipeWithWebClient(id, principal.getIdToken().getTokenValue());
             log.info("showRecipeTemplate() - got recipe with ID: {}", recipe.getId());
             log.info("showRecipeTemplate() - adding recipe to model");
             model.addAttribute("recipe", recipe);
@@ -119,7 +123,7 @@ public class RecipeMvcController {
         }
     }
 
-    private void addAttributesToModelAddRecipeForm(Model model){
+    private void addAttributesToModelAddRecipeForm(Model model, String token){
         RecipeForm recipe = new RecipeForm();
         recipe.getInstructions().add("");
         recipe.getInstructions().add("");
@@ -133,7 +137,7 @@ public class RecipeMvcController {
         model.addAttribute("diet", RecipeWebDto.Diet.values());
         model.addAttribute("difficulty", RecipeWebDto.Difficulty.values());
         model.addAttribute("measure", RecipeItemWebDto.Measure.values());
-        List<IngredientWebDto> ingredients = ingredientWebService.getAllIngredients();
+        List<IngredientWebDto> ingredients = ingredientWebService.getAllIngredients(token);
         model.addAttribute("ingredientsFromDb", ingredients);
 
     }

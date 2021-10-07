@@ -16,6 +16,7 @@ public class ChefMmvController {
     @GetMapping("/account")
     public String showAccountInfo(Model model, @AuthenticationPrincipal OidcUser principal){
         principal.getClaims().forEach((key, val) -> log.info("PRINCIPAL CLAIMS: {} - {}", key, val));
+        log.info("PRINCIPAL ID TOKEN: {}", principal.getIdToken().getTokenValue());
         ControllerModelPopulateHelper.addProfileToModel(model, principal);
         return "account";
     }

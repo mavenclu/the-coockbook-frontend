@@ -28,12 +28,8 @@ public class WebClientConfig {
     private String baseUrl;
 
     @Bean
-    public WebClient webClient(ClientRegistrationRepository clientRegistrationRepository,
-                               OAuth2AuthorizedClientRepository authorizedClientRepository) {
+    public WebClient webClient() {
 
-        ServletOAuth2AuthorizedClientExchangeFilterFunction oauth2 =
-                new ServletOAuth2AuthorizedClientExchangeFilterFunction(clientRegistrationRepository, authorizedClientRepository);
-        oauth2.setDefaultOAuth2AuthorizedClient(true);
 
         HttpClient httpClient = HttpClient.create()
                 .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 5000)
@@ -44,7 +40,6 @@ public class WebClientConfig {
 
 
         return WebClient.builder()
-                .apply(oauth2.oauth2Configuration())
                 .baseUrl(baseUrl)
                 .clientConnector(new ReactorClientHttpConnector(httpClient))
                 .defaultCookie("cookieKey", "cookieValue")
@@ -52,6 +47,7 @@ public class WebClientConfig {
                 .build();
 
     }
+
 
 
 }

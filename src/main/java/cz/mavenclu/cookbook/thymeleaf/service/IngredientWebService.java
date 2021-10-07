@@ -21,11 +21,12 @@ public class IngredientWebService {
         this.webClient = webClient;
     }
 
-    public List<IngredientWebDto> getAllIngredients() {
+    public List<IngredientWebDto> getAllIngredients(String idToken) {
         log.info("getAllIngredients");
         Mono<List<IngredientWebDto>> response = webClient
                 .get()
                 .uri("/cookbook/ingredients")
+                .headers(httpHeaders -> httpHeaders.setBearerAuth(idToken))
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
                 .bodyToMono(new ParameterizedTypeReference<>() {

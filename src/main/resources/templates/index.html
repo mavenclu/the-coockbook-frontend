@@ -9,7 +9,7 @@
 
 
     <!-- ##### Best Receipe Area Start ##### -->
-    <section class="best-receipe-area" id="recipes">
+    <section sec:authorize="isAuthenticated()" class="best-receipe-area" id="recipes">
         <div class="container">
             <div class="row mt-5">
                 <div class="col-12">
@@ -57,9 +57,9 @@
                             </div>
 
                         </div>
-                        <div class="row">
+                        <div class="row mt-5">
                             <div class="col form-check form-check-inline" th:each="feeder : ${feeders}">
-                                <input class="form-check-input" name="consumers" th:field="*{consumers}" type="checkbox"  th:id="${feeder.id}" />
+                                <input class="form-check-input" name="consumers" th:field="*{consumers}" type="checkbox" th:value="${feeder.id}" th:id="${feeder.id}" />
                                 <label class="form-check-label" th:for="${feeder.id}" th:text="${feeder.name}"></label>
                             </div>
 
@@ -94,7 +94,9 @@
     </section>
     <!-- ##### Best Receipe Area End ##### -->
 
-
+ <div sec:authorize="!isAuthenticated()">
+     <h1>Please log in to see the recipes</h1>
+ </div>
 
     <div th:replace="fragments/subscribe-area"></div>
     <div th:replace="fragments/instagram-area"></div>

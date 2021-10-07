@@ -7,20 +7,18 @@ spring:
         registration:
           auth0:
             domain: dev-8y4mualg.us.auth0.com
-            audience: http://localhost:8081/
             client-id: Vq4Ir7N0Y3ic6SkiZIgNPhJtOu5Dxddw
             client-secret: tguI5XSaN3vDP_jbXZVYx4VCP6TY-4VfHsiElv5_4T5Jgg8pZnrAhtd4hwneF6Sy
+            audience: http://localhost:8081/
+            aud: http://localhost:8081/
             scope:
               - openid
               - profile
               - email
-#            responseType: code token id_token
-#            authorization-grant-type: authorization_code
         provider:
           auth0:
-            domain: dev-8y4mualg.us.auth0.com
             audience: http://localhost:8081/
-
+            aud: http://localhost:8081/
             # trailing slash is important!
             issuer-uri: https://dev-8y4mualg.us.auth0.com/
 

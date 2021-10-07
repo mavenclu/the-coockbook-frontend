@@ -26,8 +26,8 @@ public class FeederMvcController {
     }
 
     @GetMapping("/consumers")
-    public String showConsumers(Model model){
-        model.addAttribute("feeders", feederService.findAll());
+    public String showConsumers(Model model, @AuthenticationPrincipal OidcUser principal){
+        model.addAttribute("feeders", feederService.findAll(principal.getIdToken().getTokenValue()));
         return "feeders";
     }
 
@@ -40,14 +40,15 @@ public class FeederMvcController {
     }
 
     @PostMapping("/save")
-    public String saveFeeder(@ModelAttribute FeederForm feeder, Model model, BindingResult bindingResult) {
+    public String saveFeeder(@ModelAttribute FeederForm feeder, Model model, BindingResult bindingResult,
+                             @AuthenticationPrincipal OidcUser principal) {
         log.info("saveFeeder - params feeder: {}", feeder);
         if(bindingResult.hasErrors()) {
             log.warn("saveFeeder - found errors in model: {}", bindingResult.getAllErrors());
             model.addAttribute("errors", bindingResult.getAllErrors());
             return "redirect:/feeders/add";
         }
-        feederService.saveFeeder(feeder);
+        feederService.saveFeeder(feeder, principal.getIdToken().getTokenValue());
         return "redirect:/feeders/consumers";
     }
 }
