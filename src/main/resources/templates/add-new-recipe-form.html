@@ -59,18 +59,18 @@
                                     </div>
 
                                     <div class="col-md-4">
-                                        <label for="prepTime" class="form-label">Preparation time</label>
-                                        <input th:field="*{prepTime}" type="number" class="form-control" id="prepTime" placeholder="15 min" value="" step="5" min="5" required>
+                                        <label for="prepTime" class="form-label">Preparation time in minutes</label>
+                                        <input th:field="*{prepTime}" type="number" class="form-control" id="prepTime" placeholder="5"  step="5" min="5"  required>
                                     </div>
 
                                     <div class="col-md-4">
-                                        <label for="cookingTime" class="form-label">Cooking time</label>
-                                        <input th:field="*{cookingTime}" type="number" class="form-control" id="cookingTime" placeholder="" value="30 min" min="5" step="5" required>
+                                        <label for="cookingTime" class="form-label">Cooking time in minutes</label>
+                                        <input th:field="*{cookingTime}" type="number" class="form-control" id="cookingTime" placeholder="5"  min="5" step="5" required>
                                     </div>
 
                                     <div class="col-md-4">
                                         <label for="yields" class="form-label">Yields</label>
-                                        <input th:field="*{yields}" type="number" class="form-control" id="yields" placeholder="" value="30 min" min="1" step="1" required>
+                                        <input th:field="*{yields}" type="number" class="form-control" id="yields" placeholder="4" max="20" min="1" step="1" required>
                                     </div>
 
                                     <div class="col-md-3">
@@ -106,8 +106,8 @@
                                 <div class="row g-5" th:each="ingredient, iStat : *{ingredients}">
 
                                     <div class="col-md-3">
-                                        <label  class="form-label">Amount</label>
-                                        <input type="number" class="form-control"  th:field="*{ingredients[__${iStat.index}__].amount}" placeholder="2" min="0" required>
+                                        <label th:for="'amount' + ${iStat}" class="form-label">Amount</label>
+                                        <input th:id="'amount' + ${iStat}" type="number" class="form-control"  th:field="*{ingredients[__${iStat.index}__].amount}" placeholder="2"  min="0" required>
                                     </div>
 
                                     <div class="col-md-5">

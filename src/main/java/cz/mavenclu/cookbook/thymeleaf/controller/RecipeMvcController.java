@@ -92,7 +92,8 @@ public class RecipeMvcController {
         } else {
 
             log.info("filterRecipes - calling recipe service");
-            List<RecipeWebDto> filteredResult = recipeWebService.findRecipesByCuisine(searchForm.getCuisine().getLabel(), principal.getIdToken().getTokenValue());
+//            List<RecipeWebDto> filteredResult = recipeWebService.findRecipesByCuisine(searchForm.getCuisine().getLabel(), principal.getIdToken().getTokenValue());
+            List<RecipeWebDto> filteredResult = recipeWebService.filterRecipes(searchForm, principal.getIdToken().getTokenValue());
             log.info("filterRecipes - got filtered result: {}", filteredResult);
             model.addAttribute("recipes", filteredResult);
             model.addAttribute("feeders", feederService.findAll(principal.getIdToken().getTokenValue()));

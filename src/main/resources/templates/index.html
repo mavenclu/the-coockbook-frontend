@@ -45,7 +45,6 @@
                                 <select th:field="*{diet}" class="form-select" id="diet" >
                                     <option value="">Diet</option>
                                     <option th:each="op : ${T(cz.mavenclu.cookbook.thymeleaf.dto.RecipeWebDto.Diet).values()}" th:value="${{op.name}}" th:text="${op.label}"></option>
-
                                 </select>
                             </div>
                             <div class="col-12 col-lg-3">
@@ -55,11 +54,18 @@
 
                                 </select>
                             </div>
+                            <div class="col-12 col-lg-3">
+                                <select th:field="*{requiredTime}"  class="form-select" id="totalTime" >
+                                    <option value="">Required Time</option>
+                                    <option th:each="op : ${T(cz.mavenclu.cookbook.thymeleaf.dto.RecipeWebDto.TotalCookingTime).values()}" th:value="${{op.name}}" th:text="${op.label}"></option>
+
+                                </select>
+                            </div>
 
                         </div>
                         <div class="row mt-5">
                             <div class="col form-check form-check-inline" th:each="feeder : ${feeders}">
-                                <input class="form-check-input" name="consumers" th:field="*{consumers}" type="checkbox" th:value="${feeder.id}" th:id="${feeder.id}" />
+                                <input class=" form form-check-input" name="consumers" th:field="*{consumers}" type="checkbox" th:value="${feeder.id}" th:id="${feeder.id}" />
                                 <label class="form-check-label" th:for="${feeder.id}" th:text="${feeder.name}"></label>
                             </div>
 

@@ -53,6 +53,10 @@ public class RecipeWebDto {
     @NotNull
     List<String> instructions = new ArrayList<>();
 
+    public int getTotalCookingTime(){
+        return prepTime + cookingTime;
+    }
+
     public enum Diet {
         DIARY_FREE("Diary free"),
         GLUTEN_FREE("Gluten free"),
@@ -129,6 +133,26 @@ public class RecipeWebDto {
         }
     }
 
+    public enum TotalCookingTime {
+        FAST("30 min or less"),
+        MEDIUM("from 30 min to 1h"),
+        SLOW("more than 1h");
+
+        private final String label;
+
+        TotalCookingTime(String value){
+            this.label = value;
+        }
+
+        public String getLabel() {
+            return label;
+        }
+        @Override
+        public String toString() {
+            return label;
+        }
+
+    }
 
 
 }

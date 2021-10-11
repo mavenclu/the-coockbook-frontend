@@ -15,4 +15,5 @@ public class SearchObjectForm {
     private RecipeWebDto.Diet diet;
     private RecipeWebDto.Cuisine cuisine;
     private List<FeederDto> consumers;
+    private RecipeWebDto.TotalCookingTime requiredTime;
 }

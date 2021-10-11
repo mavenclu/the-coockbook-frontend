@@ -72,7 +72,7 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-12 col-md-8">
+                    <div class="col-12 col-md-4">
                         <div class="receipe-headline my-5">
                             <div class="receipe-duration">
                                 <h6 href="#"  th:each="diet : ${recipe.diets}"  th:text="'Diet: ' + ${diet}"></h6>
@@ -81,7 +81,12 @@
 
                         </div>
                     </div>
-                </div>
+                    <div class="col-12 col-md-8">
+                        <form th:action="@{/recipes/like-recipe}" th:method="post" th:object="">
+
+                        </form>
+                    </div>
+                    </div>
 
                 <div class="row">
                     <!-- Ingredients -->

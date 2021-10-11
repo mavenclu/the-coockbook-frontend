@@ -48,3 +48,4 @@ cookbook:
       base-url: http://localhost:8081
       all-feeders: /cookbook/feeders
       recipes-search: /cookbook/recipes/search/{search}
+      recipes-filter: /cookbook/recipes/filter/
