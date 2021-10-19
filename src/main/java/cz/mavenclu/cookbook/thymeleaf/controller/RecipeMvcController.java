@@ -1,11 +1,13 @@
 package cz.mavenclu.cookbook.thymeleaf.controller;
 
+import cz.mavenclu.cookbook.thymeleaf.dto.FeederDto;
 import cz.mavenclu.cookbook.thymeleaf.dto.IngredientWebDto;
 import cz.mavenclu.cookbook.thymeleaf.dto.RecipeForm;
 import cz.mavenclu.cookbook.thymeleaf.dto.RecipeItemForm;
 import cz.mavenclu.cookbook.thymeleaf.dto.RecipeItemWebDto;
 import cz.mavenclu.cookbook.thymeleaf.dto.RecipeWebDto;
 import cz.mavenclu.cookbook.thymeleaf.dto.SearchObjectForm;
+import cz.mavenclu.cookbook.thymeleaf.exception.FilterRecipesNotRetrievedException;
 import cz.mavenclu.cookbook.thymeleaf.service.FeederService;
 import cz.mavenclu.cookbook.thymeleaf.service.IngredientWebService;
 import cz.mavenclu.cookbook.thymeleaf.service.RecipeWebService;
@@ -26,6 +28,7 @@ import org.springframework.web.reactive.function.client.WebClientResponseExcepti
 import org.springframework.web.server.ResponseStatusException;
 import org.thymeleaf.exceptions.TemplateInputException;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -44,11 +47,13 @@ public class RecipeMvcController {
 
     @GetMapping("/")
     public String home(Model model, @AuthenticationPrincipal OidcUser principal) {
-
-        ControllerModelPopulateHelper.addProfileToModel(model, principal);
-        model.addAttribute("recipes", recipeWebService.getAllRecipes(principal.getIdToken().getTokenValue()));
-        model.addAttribute("searchForm", new SearchObjectForm());
-        model.addAttribute("feeders", feederService.findAll(principal.getIdToken().getTokenValue()));
+        if (principal != null){
+            ControllerModelPopulateHelper.addProfileToModel(model, principal);
+            model.addAttribute("recipes", recipeWebService.getAllRecipes(principal.getIdToken().getTokenValue()));
+            List<FeederDto> feederList = feederService.findAll(principal.getIdToken().getTokenValue());
+            model.addAttribute("feeders", feederList);
+            model.addAttribute("searchForm", new SearchObjectForm());
+        }
         return "index";
     }
 
@@ -84,17 +89,21 @@ public class RecipeMvcController {
 
     @PostMapping("/recipes/filter")
     public String filterRecipes(Model model, @ModelAttribute SearchObjectForm searchForm,
-                                BindingResult bindingResult, @AuthenticationPrincipal OidcUser principal){
-        log.info("filterRecipes - filtering recipes with param: {}", searchForm.getCuisine());
-        if (bindingResult.hasErrors() || searchForm.getCuisine() == null){
+                                BindingResult bindingResult, @AuthenticationPrincipal OidcUser principal) throws FilterRecipesNotRetrievedException {
+        log.info("filterRecipes - filtering recipes with param: {}", searchForm);
+
+        if (bindingResult.hasErrors()){
             log.info("filterRecipes - errors found in model. Redirecting home.");
+            bindingResult.getAllErrors()
+                    .forEach(error -> log.error("filterRecipes - errors in model: {}", error.toString())
+            );
             return "redirect:/";
         } else {
 
             log.info("filterRecipes - calling recipe service");
-//            List<RecipeWebDto> filteredResult = recipeWebService.findRecipesByCuisine(searchForm.getCuisine().getLabel(), principal.getIdToken().getTokenValue());
             List<RecipeWebDto> filteredResult = recipeWebService.filterRecipes(searchForm, principal.getIdToken().getTokenValue());
             log.info("filterRecipes - got filtered result: {}", filteredResult);
+
             model.addAttribute("recipes", filteredResult);
             model.addAttribute("feeders", feederService.findAll(principal.getIdToken().getTokenValue()));
             model.addAttribute("searchForm", new SearchObjectForm());
@@ -142,5 +151,6 @@ public class RecipeMvcController {
         model.addAttribute("ingredientsFromDb", ingredients);
 
     }
+
 
 }

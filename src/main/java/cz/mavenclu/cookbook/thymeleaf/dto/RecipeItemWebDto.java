@@ -3,12 +3,13 @@ package cz.mavenclu.cookbook.thymeleaf.dto;
 import lombok.Data;
 
 import javax.validation.constraints.Min;
+import javax.validation.constraints.Size;
 
 @Data
 public class RecipeItemWebDto {
     private long id;
-    @Min(0)
-    private String amount;
+    @Size(min = 1)
+    private String amount;  //todo predelat
     private Measure measure;
     private IngredientWebDto ingredient;
 

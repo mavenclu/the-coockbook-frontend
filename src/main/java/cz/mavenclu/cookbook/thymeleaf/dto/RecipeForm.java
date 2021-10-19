@@ -24,7 +24,7 @@ public class RecipeForm {
     private int yields;
     private RecipeWebDto.Difficulty difficulty;
     private RecipeWebDto.Cuisine cuisine;
-    private List<RecipeWebDto.Diet> diets;
+    private RecipeWebDto.Diet diet;
 
     List<RecipeItemForm> ingredients = new ArrayList<>();
     List<String> instructions = new ArrayList<>();

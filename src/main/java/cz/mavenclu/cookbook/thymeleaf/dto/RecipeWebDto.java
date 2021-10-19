@@ -43,7 +43,7 @@ public class RecipeWebDto {
     @NotNull
     private Cuisine cuisine;
     @NotNull
-    private List<Diet> diets;
+    private Diet diet;
     @Min(1)
     private int yields;
 
@@ -59,12 +59,14 @@ public class RecipeWebDto {
 
     public enum Diet {
         DIARY_FREE("Diary free"),
+        EGG_FREE("No eggs"),
         GLUTEN_FREE("Gluten free"),
-        HISTAMINE_FREE("Low histamine"),
+        HISTAMINE_FREE("No or low histamine contain"),
         OMNIVORE("Omnivore"),
         REFINE_SUGARS_FREE("Refine sugars free"),
         VEGAN("Vegan"),
-        VEGETARIAN("Vegetarian");
+        VEGETARIAN("Vegetarian"),
+        ULTIMATE_HEALTH("Whole Food, Plant-Based, SOS-Free");
 
 
         private final String label;

@@ -112,12 +112,13 @@ public class RecipeWebService {
 
     public List<RecipeWebDto> filterRecipes(SearchObjectForm searchForm, String tokenValue) throws FilterRecipesNotRetrievedException {
         log.info("{} - filterRecipes - filtering with param: {}", this.getClass().getSimpleName(), searchForm);
+        Mono<SearchObjectForm> bodyParam = Mono.just(searchForm);
         List<RecipeWebDto> filteredRecipes = webClient
                 .post()
                 .uri(filterUrl)
                 .headers(httpHeaders -> httpHeaders.setBearerAuth(tokenValue))
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(searchForm, SearchObjectForm.class)
+                .body(bodyParam, SearchObjectForm.class)
                 .retrieve()
                 .bodyToMono(new ParameterizedTypeReference<List<RecipeWebDto>>() {
                 })

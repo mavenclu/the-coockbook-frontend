@@ -89,17 +89,18 @@
                                         </select>
                                     </div>
 
+                                    <div class="col-md-4">
+                                        <label for="diet" class="form-label">Diet</label>
+                                        <select th:field="*{diet}" class="form-select" id="diet" required>
+                                            <option value="">Choose...</option>
+                                            <option th:each="di : ${T(cz.mavenclu.cookbook.thymeleaf.dto.RecipeWebDto.Diet).values()}" th:value="${di.name}" th:text="${di.label}"></option>
+                                        </select>
+                                    </div>
+
                                 </div>
 
                                 <hr class="my-4">
-                                <h4>Diet</h4>
 
-                                <div class="form-check form-check-inline" th:each="di : ${T(cz.mavenclu.cookbook.thymeleaf.dto.RecipeWebDto.Diet).values()}">
-                                    <input class="form-check-input" name="diets" th:field="*{diets}" type="checkbox" th:value="${di.name}"/>
-                                    <label class="form-check-label"  th:text="${di.label}"></label>
-                                </div>
-
-                                <hr class="my-4">
 
                                 <h4 class="mb-3">Ingredients</h4>
 
@@ -143,10 +144,7 @@
                                         <input th:field="*{instructions[__${itemStat.index}__]}" type="text" class="form-control" >
 
                                     </div>
-<!--                                    <div  class="input-group-text">-->
-<!--                                        <label class="form-label mt-0" type="number"  th:text="${itemStat.count}"></label>-->
-<!--                                    </div>-->
-<!--                                    <input th:field="*{instructions[__${itemStat.index}__]}" type="text" class="form-control" >-->
+
                                 </div>
 
 

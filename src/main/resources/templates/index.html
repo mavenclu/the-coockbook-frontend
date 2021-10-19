@@ -1,113 +1,134 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 <div th:replace="fragments/head"></div>
 <body>
 
-<div th:replace="fragments/preloader"></div>
+<div sec:authorize="isAuthenticated()" th:replace="fragments/preloader"></div>
 <div th:replace="fragments/header"></div>
-<div th:replace="fragments/hero-area"></div>
+<div sec:authorize="isAuthenticated()" th:replace="fragments/hero-area"></div>
 
 
-    <!-- ##### Best Receipe Area Start ##### -->
-    <section sec:authorize="isAuthenticated()" class="best-receipe-area" id="recipes">
-        <div class="container">
-            <div class="row mt-5">
-                <div class="col-12">
-                    <div class="section-heading">
-                        <h3>Recipes</h3>
-                    </div>
+<!-- ##### Best Receipe Area Start ##### -->
+<section sec:authorize="isAuthenticated()" class="best-receipe-area" id="recipes">
+    <div class="container">
+        <div class="row mt-5">
+            <div class="col-12">
+                <div class="section-heading">
+                    <h3>Recipes</h3>
                 </div>
-            </div>
-
-            <!-- Receipe Post Search -->
-            <div class="receipe-post-search mb-80">
-                <div class="container">
-                    <form th:object="${searchForm}" action="#" method="post" th:action="@{/recipes/filter}">
-
-                        <div class="row text-right">
-                            <div class="col">
-                                <div class="input-group mb-3">
-                                    <input type="search" class="form-control" placeholder="Search for a recipe by title, ingredient, description" aria-label="Recipient's username" aria-describedby="button-addon2">
-                                    <button class="btn delicious-btn" type="button" id="button-addon2">Search</button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-12 col-lg-3">
-                                <select th:field="*{cuisine}" class="form-select" id="cuisine" name="cuisine" onchange="this.form.submit()">
-                                    <option value="">Cuisine</option>
-                                    <option th:each="cu : ${T(cz.mavenclu.cookbook.thymeleaf.dto.RecipeWebDto.Cuisine).values()}" th:value="${{cu.name()}}" th:text="${cu.label}"></option>
-
-                                </select>
-                            </div>
-                            <div class="col-12 col-lg-3">
-                                <select th:field="*{diet}" class="form-select" id="diet" >
-                                    <option value="">Diet</option>
-                                    <option th:each="op : ${T(cz.mavenclu.cookbook.thymeleaf.dto.RecipeWebDto.Diet).values()}" th:value="${{op.name}}" th:text="${op.label}"></option>
-                                </select>
-                            </div>
-                            <div class="col-12 col-lg-3">
-                                <select th:field="*{difficulty}"  class="form-select" id="difficulty" >
-                                    <option value="">Difficulty</option>
-                                    <option th:each="op : ${T(cz.mavenclu.cookbook.thymeleaf.dto.RecipeWebDto.Difficulty).values()}" th:value="${{op.name}}" th:text="${op.label}"></option>
-
-                                </select>
-                            </div>
-                            <div class="col-12 col-lg-3">
-                                <select th:field="*{requiredTime}"  class="form-select" id="totalTime" >
-                                    <option value="">Required Time</option>
-                                    <option th:each="op : ${T(cz.mavenclu.cookbook.thymeleaf.dto.RecipeWebDto.TotalCookingTime).values()}" th:value="${{op.name}}" th:text="${op.label}"></option>
-
-                                </select>
-                            </div>
-
-                        </div>
-                        <div class="row mt-5">
-                            <div class="col form-check form-check-inline" th:each="feeder : ${feeders}">
-                                <input class=" form form-check-input" name="consumers" th:field="*{consumers}" type="checkbox" th:value="${feeder.id}" th:id="${feeder.id}" />
-                                <label class="form-check-label" th:for="${feeder.id}" th:text="${feeder.name}"></label>
-                            </div>
-
-                        </div>
-
-                    </form>
-                </div>
-            </div>
-
-            <div class="row" >
-                <!-- Single Best Receipe Area -->
-                <div class="col-12 col-sm-6 col-lg-4" th:each="recipe : ${recipes}">
-                    <div class="single-best-receipe-area mb-30">
-                        <img th:src="@{/img/bg-img/r1.jpg}" alt="">
-                        <div class="receipe-content">
-                            <a th:href="@{/recipes/{id}(id=${recipe.id})}">
-                                <h5 th:text="${recipe.title}"></h5>
-                            </a>
-                            <div class="ratings">
-                                <i class="fa fa-star" aria-hidden="true"></i>
-                                <i class="fa fa-star" aria-hidden="true"></i>
-                                <i class="fa fa-star" aria-hidden="true"></i>
-                                <i class="fa fa-star" aria-hidden="true"></i>
-                                <i class="fa fa-star-o" aria-hidden="true"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
             </div>
         </div>
-    </section>
-    <!-- ##### Best Receipe Area End ##### -->
 
- <div sec:authorize="!isAuthenticated()">
-     <h1>Please log in to see the recipes</h1>
- </div>
+        <!-- Receipe Post Search -->
+        <div class="receipe-post-search mb-80">
+            <div class="container">
+                <form th:object="${searchForm}" method="post" th:action="@{/recipes/filter}">
 
-    <div th:replace="fragments/subscribe-area"></div>
-    <div th:replace="fragments/instagram-area"></div>
-    <div th:replace="fragments/footer"></div>
-    <div th:replace="fragments/scripts"></div>
+                    <div class="row text-right">
+                        <div class="col">
+                            <div class="input-group mb-3">
+                                <input type="search" class="form-control"
+                                       placeholder="Search for a recipe by title, ingredient, description"
+                                       aria-label="Recipient's username" aria-describedby="button-addon2">
+                                <button class="btn delicious-btn" type="submit" id="button-addon2">Search</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-12 col-lg-3">
+                            <select th:field="*{cuisine}" class="form-select">
+                                <option value="">Cuisine</option>
+                                <option th:each="cuisine : ${T(cz.mavenclu.cookbook.thymeleaf.dto.RecipeWebDto.Cuisine).values()}"
+                                        th:value="${cuisine.name}" th:text="${cuisine.label}"></option>
+
+                            </select>
+                        </div>
+                        <div class="col-12 col-lg-3">
+                            <select th:field="*{diet}" class="form-select">
+                                <option value="">Diet</option>
+                                <option th:each="diet : ${T(cz.mavenclu.cookbook.thymeleaf.dto.RecipeWebDto.Diet).values()}"
+                                        th:value="${diet.name}" th:text="${diet.label}"></option>
+                            </select>
+                        </div>
+                        <div class="col-12 col-lg-3">
+                            <select th:field="*{difficulty}" class="form-select">
+                                <option value="">Difficulty</option>
+                                <option th:each="difficulty : ${T(cz.mavenclu.cookbook.thymeleaf.dto.RecipeWebDto.Difficulty).values()}"
+                                        th:value="${difficulty.name}" th:text="${difficulty.label}"></option>
+
+                            </select>
+                        </div>
+                        <div class="col-12 col-lg-3">
+                            <select th:field="*{requiredTime}" class="form-select" id="totalTime">
+                                <option value="">Required Time</option>
+                                <option th:each="op : ${T(cz.mavenclu.cookbook.thymeleaf.dto.RecipeWebDto.TotalCookingTime).values()}"
+                                        th:value="${op.name}" th:text="${op.label}"></option>
+
+                            </select>
+                        </div>
+
+                    </div>
+                    <div class="row mt-5">
+                        <div class="col form-check form-check-inline" >
+                            <input th:each="feeder, stat : ${feeders}"
+                                   class="form-check-input"
+                                   type="checkbox"
+                                   th:id="${feeder.id}"
+                                   th:field="*{consumers}"
+                                   th:value="${feeder.id}"
+                                   th:text="${feeder.name}"
+                            />
+<!--                            <label class="form-check-label" th:for="${feeder.id}" th:text="${feeder.name}"></label>-->
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Single Best Receipe Area -->
+            <div class="col-12 col-sm-6 col-lg-4" th:each="recipe : ${recipes}">
+                <div class="single-best-receipe-area mb-30">
+                    <img th:src="@{/img/bg-img/r1.jpg}" alt="">
+                    <div class="receipe-content">
+                        <a th:href="@{/recipes/{id}(id=${recipe.id})}">
+                            <h5 th:text="${recipe.title}"></h5>
+                        </a>
+                        <div class="ratings">
+                            <i class="fa fa-star" aria-hidden="true"></i>
+                            <i class="fa fa-star" aria-hidden="true"></i>
+                            <i class="fa fa-star" aria-hidden="true"></i>
+                            <i class="fa fa-star" aria-hidden="true"></i>
+                            <i class="fa fa-star-o" aria-hidden="true"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+<!-- ##### Best Receipe Area End ##### -->
+
+<section sec:authorize="!isAuthenticated()" class="best-receipe-area" id="recipes1">
+    <div class="container">
+        <div class="row mt-5">
+            <div class="col-12">
+                <div class="section-heading">
+                    <h3>Please log in to see the recipes</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div sec:authorize="isAuthenticated()" th:replace="fragments/subscribe-area"></div>
+<div th:replace="fragments/instagram-area"></div>
+<div th:replace="fragments/footer"></div>
+<div th:replace="fragments/scripts"></div>
 
 
 </body>

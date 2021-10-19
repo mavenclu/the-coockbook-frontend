@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 <div th:replace="fragments/head"></div>
 <body>
 
 <div th:replace="fragments/preloader"></div>
 <div th:replace="fragments/header"></div>
-
 
 
 <!-- ##### Breadcumb Area Start ##### -->
@@ -22,7 +22,7 @@
 </div>
 <!-- ##### Breadcumb Area End ##### -->
 
-<div class="receipe-post-area section-padding-80">
+<div class="receipe-post-area section-padding-80" sec:authorize="isAuthenticated()">
 
     <section class="best-receipe-area" id="recipes">
         <div class="container">
@@ -33,44 +33,54 @@
                     </div>
                 </div>
 
+                <div class="align-items-end mb-5">
+                    <a th:href="@{/feeders/add}" class="btn delicious-btn mt-30">Add new Consumer</a>
+
+                </div>
+
                 <div class="col-12">
-                    <table class="table table-striped">
+                    <table class="table ">
                         <thead>
                         <tr>
                             <th scope="col">#</th>
                             <th scope="col">Name</th>
+                            <th scope="col">Allergies</th>
+                            <th scope="col">Food Intolerances</th>
+                            <th scope="col">Action</th>
                         </tr>
                         </thead>
                         <tbody>
-                        <tr th:each="feeder, iStat : ${feeders}">
-                            <th scope="row" th:text="${iStat.count}"></th>
-                            <td th:text="${feeder.name}"></td>
-                        </tr>
+
+                        <div th:remove="tag" th:each="feeder, iStat :${feeders}"
+                             th:with="allergenCount=${feeder.allergens.size()}">
+                            <tr>
+                                <td th:text="${iStat.count}" th:rowspan="${allergenCount>0}?${allergenCount}:1"></td>
+                                <td th:text="${feeder.name}" th:rowspan="${allergenCount>0}?${allergenCount}:1"></td>
+                                <td th:text="${allergenCount>0}?${feeder.allergens[0].name}:''"></td>
+                                <td th:text="${feeder.intolerances.size()}"
+                                    th:rowspan="${allergenCount>0}?${allergenCount}:1"></td>
+                                <td th:rowspan="${allergenCount>0}?${allergenCount}:1">
+                                    <a class="btn btn-outline-info" th:href="@{/}">Edit </a>
+                                    <a class="btn btn-outline-danger"
+                                       th:href="@{'/feeders/delete/' + ${feeder.id}}">Delete </a>
+                                </td>
+                            </tr>
+                            <tr th:each="allergen,iStat:${feeder.allergens}" th:if="${!iStat.first}">
+                                <td th:text="${allergen.name}"></td>
+                            </tr>
+                        </div>
 
                         </tbody>
                     </table>
                 </div>
-                <div sec:authorize="isAuthenticated()">
-                    <a th:href="@{/feeders/add}" class="btn delicious-btn mt-30" type="button">Add new Consumer</a>
 
-                </div>
 
             </div>
         </div>
     </section>
 
 
-
-
 </div>
-
-
-
-
-
-
-
-
 
 
 <div th:replace="fragments/subscribe-area"></div>

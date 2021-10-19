@@ -18,6 +18,7 @@
             <div sec:authorize="isAuthenticated()">
                 <h2 th:text="${profile.name}"></h2>
                 <p th:text="${profile.email}"></p>
+                <p th:text="${#strings.substringAfter(profile.sub, '|')}"></p>
                 <a th:href="@{/logout}">Log Out</a>
             </div>
 

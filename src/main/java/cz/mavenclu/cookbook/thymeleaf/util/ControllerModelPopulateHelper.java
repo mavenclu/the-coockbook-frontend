@@ -23,4 +23,8 @@ public class ControllerModelPopulateHelper {
             log.info("addPrincipalToModel() - principal is null");
         }
     }
+
+    public String getChefId(OidcUser principal){
+        return principal.getClaims().get("sub").toString().substring(6);
+    }
 }
