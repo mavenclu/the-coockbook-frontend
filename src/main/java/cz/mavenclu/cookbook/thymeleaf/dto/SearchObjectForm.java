@@ -1,6 +1,5 @@
 package cz.mavenclu.cookbook.thymeleaf.dto;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,6 +15,6 @@ public class SearchObjectForm {
     private RecipeWebDto.Difficulty difficulty;
     private RecipeWebDto.Diet diet;
     private RecipeWebDto.Cuisine cuisine;
-    private List<FeederDto> consumers = new ArrayList<>();
+    private List<String> consumersIdList = new ArrayList<>();
     private RecipeWebDto.TotalCookingTime requiredTime;
 }

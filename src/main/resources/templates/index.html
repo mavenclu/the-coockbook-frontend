@@ -72,13 +72,11 @@
                     </div>
                     <div class="row mt-5">
                         <div class="col form-check form-check-inline" >
-                            <input th:each="feeder, stat : ${feeders}"
-                                   class="form-check-input"
-                                   type="checkbox"
-                                   th:id="${feeder.id}"
-                                   th:field="*{consumers}"
-                                   th:value="${feeder.id}"
+                            <input type="checkbox" name="consumersIdList" class="form-check-input"
+                                   th:each="feeder, stat : ${feeders}"
                                    th:text="${feeder.name}"
+                                   th:value="${feeder.id}"
+                                   th:field="*{consumersIdList}"
                             />
 <!--                            <label class="form-check-label" th:for="${feeder.id}" th:text="${feeder.name}"></label>-->
                         </div>

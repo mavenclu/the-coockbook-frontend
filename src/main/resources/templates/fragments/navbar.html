@@ -25,11 +25,11 @@
                         <!-- Nav Start -->
                         <div class="classynav"  sec:authorize="isAuthenticated()">
                             <ul>
-                                <li class="active"><a th:href="@{/}">Home</a></li>
-                                <li><a th:href="@{/#recipes}">Recipes</a></li>
-                                <li><a th:href="@{/recipes/add}">Add Recipe</a></li>
-                                <li><a th:href="@{/feeders/consumers}">My Consumers</a></li>
-                                <li><a th:href="@{/account}">My Account</a>
+                                <li th:class="${#httpServletRequest.requestURI == '/'} ? active : '' "><a th:href="@{/}">Home</a></li>
+                                <li ><a th:href="@{/#recipes}">Recipes</a></li>
+                                <li th:class="${#httpServletRequest.requestURI == '/recipes/add'} ? active : '' "><a th:href="@{/recipes/add}">Add Recipe</a></li>
+                                <li th:class="${#httpServletRequest.requestURI == '/feeders/consumers'} ? active : '' "><a th:href="@{/feeders/consumers}">My Consumers</a></li>
+                                <li th:class="${#httpServletRequest.requestURI == '/account'} ? active : '' "><a th:href="@{/account}">My Account</a>
                                     <ul class="dropdown">
                                         <li><a th:href="@{/account}">Profile</a></li>
                                         <li><a th:href="@{/logout}">Log out</a></li>
